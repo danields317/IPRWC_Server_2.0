@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ServerApplication" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="org.example.IprwcServerApplication" />
+    <module name="IPRWC_Server_2.0" />
+    <option name="PROGRAM_PARAMETERS" value="server config.yml" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

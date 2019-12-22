@@ -23,7 +23,8 @@ public class AccountList {
         return totalPages;
     }
 
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
+    public void setTotalPages(double totalPages) {
+        System.out.println(totalPages);
+        this.totalPages = (int) Math.ceil(totalPages);
     }
 }

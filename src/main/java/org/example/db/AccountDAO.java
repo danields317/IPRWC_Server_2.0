@@ -19,8 +19,8 @@ public interface AccountDAO {
     @SqlQuery("SELECT * FROM account LIMIT :pagesize OFFSET :offset")
     List<Account> getAccountList(@Bind("pagesize") int pageSize, @Bind("offset") int offset);
 
-    @SqlQuery("SELECT (COUNT(*) / :pagesize) FROM account")
-    int getMaxPages(@Bind("pagesize") int pageSize);
+    @SqlQuery("SELECT (COUNT(*)::DECIMAL / :pagesize) FROM account")
+    double getMaxPages(@Bind("pagesize") int pageSize);
 
     @SqlQuery("SELECT * FROM account WHERE account_id = :account_id")
     Account readAccountById(@Bind("account_id") int id);
