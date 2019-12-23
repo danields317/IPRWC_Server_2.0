@@ -2,13 +2,17 @@ package org.example.resources;
 
 
 import org.example.controller.ProductController;
+import org.example.model.Product;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.jdbi.v3.core.Jdbi;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.NoSuchElementException;
 
 @Path("/api/product")
@@ -22,9 +26,46 @@ public class ProductResource {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadProductImage(@FormDataParam("image")InputStream image,
-                                       @FormDataParam("image")FormDataContentDisposition imageDetail){
-        return Response.status(Response.Status.OK).entity(imageDetail.getName()).build();
+    public Response uploadProduct(@FormDataParam("thumbnail")InputStream image,
+                                       @FormDataParam("thumbnail")FormDataContentDisposition imageDetail,
+                                       @FormDataParam("productName") String productName,
+                                       @FormDataParam("description") String description,
+                                       @FormDataParam("brand") String brand,
+                                       @FormDataParam("price") double price,
+                                       @FormDataParam("stock")int stock
+                                       ){
+        try {
+            Product product = new Product(productName, description, brand, price, stock);
+            productController.uploadProduct(image, product);
+            return Response.ok().build();
+        } catch (IOException e){
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while storing image").build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Unable to create product due to unforeseen circumstances").build();
+        }
+    }
+
+    @PUT
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response updateProduct(@FormDataParam("thumbnail")InputStream image,
+                                       @FormDataParam("thumbnail")FormDataContentDisposition imageDetail,
+                                       @FormDataParam("id") int id,
+                                       @FormDataParam("productName") String productName,
+                                       @FormDataParam("description") String description,
+                                       @FormDataParam("brand") String brand,
+                                       @FormDataParam("price") double price,
+                                       @FormDataParam("stock")int stock
+    ){
+        try {
+            Product product = new Product(id, productName, description, brand, price, stock);
+            productController.updateProduct(image, product);
+            return Response.ok().build();
+        } catch (IOException e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while storing image").build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Unable to create product due to unforeseen circumstances").build();
+        }
     }
 
     @GET
@@ -52,8 +93,20 @@ public class ProductResource {
         }
     }
 
+    @POST
+    @Path("/img/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response uploadProductImage(@PathParam("id") int productId){
+        try {
+            productController.uploadProductImage(productId);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @GET
-    @Path("img/{id}")
+    @Path("/img/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProductImages(@PathParam("id") int id){
         try {
@@ -64,9 +117,9 @@ public class ProductResource {
     }
 
     @DELETE
-    @Path("img/{productId}/{imageId}")
+    @Path("/img/{productId}/{imageId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteProductImage(@PathParam("productId") int productId, @PathParam("productId") int imageId){
+    public Response deleteProductImage(@PathParam("productId") int productId, @PathParam("imageId") int imageId){
         try {
             productController.deleteProductImageWithId(productId, imageId);
             return Response.status(Response.Status.NO_CONTENT).build();

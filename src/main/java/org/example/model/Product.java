@@ -4,13 +4,15 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static jdk.nashorn.internal.objects.NativeMath.round;
+
 public class Product {
 
     private int id;
     private String productName;
     private String description;
     private String brand;
-    private BigDecimal price;
+    private double price;
     private int stock;
     private String thumbnail;
     private List<ProductImage> images;
@@ -19,13 +21,31 @@ public class Product {
 
     }
 
-    public Product(int id, String productName, String description, String brand, BigDecimal price, int stock, String thumbnail) {
+    public Product(String productName, String description, String brand, double price, int stock) {
+        this.productName = productName;
+        this.description = description;
+        this.brand = brand;
+        this.price = price;
+        this.stock = stock;
+    }
+
+    public Product(int id, String productName, String description, String brand, double price, int stock) {
         this.id = id;
         this.productName = productName;
         this.description = description;
         this.brand = brand;
         this.price = price;
         this.stock = stock;
+    }
+
+    public Product(int id, String productName, String description, String brand, double price, int stock, String thumbnail) {
+        this.id = id;
+        this.productName = productName;
+        this.description = description;
+        this.brand = brand;
+        this.price = price;
+        this.stock = stock;
+        this.thumbnail = thumbnail;
     }
 
     public int getId() {
@@ -60,11 +80,11 @@ public class Product {
         this.brand = brand;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
