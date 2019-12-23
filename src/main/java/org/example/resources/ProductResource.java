@@ -1,0 +1,92 @@
+package org.example.resources;
+
+
+import org.example.controller.ProductController;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.jdbi.v3.core.Jdbi;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.InputStream;
+import java.util.NoSuchElementException;
+
+@Path("/api/product")
+public class ProductResource {
+
+    private final ProductController productController;
+
+    public ProductResource(Jdbi jdbi){
+        this.productController = new ProductController(jdbi);
+    }
+
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadProductImage(@FormDataParam("image")InputStream image,
+                                       @FormDataParam("image")FormDataContentDisposition imageDetail){
+        return Response.status(Response.Status.OK).entity(imageDetail.getName()).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProduct(@PathParam("id") int id){
+        try{
+            return Response.status(Response.Status.OK).entity(productController.getProductWithId(id)).build();
+        } catch (Exception e){
+            return Response.status(Response.Status.NOT_FOUND).entity("Product with id " + id + " was not found").build();
+        }
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteProduct(@PathParam("id") int id){
+        try{
+            productController.deleteProductWithId(id);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (NoSuchElementException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Product with id " + id + " was not found").build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.CONFLICT).entity("Product with id " + id + " could not be deleted").build();
+        }
+    }
+
+    @GET
+    @Path("img/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProductImages(@PathParam("id") int id){
+        try {
+            return Response.status(Response.Status.OK).entity(productController.getProductImagesWithId(id)).build();
+        } catch (Exception e){
+            return Response.status(Response.Status.NOT_FOUND).entity("Images linked with product id " + id + " were not found").build();
+        }
+    }
+
+    @DELETE
+    @Path("img/{productId}/{imageId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteProductImage(@PathParam("productId") int productId, @PathParam("productId") int imageId){
+        try {
+            productController.deleteProductImageWithId(productId, imageId);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (NoSuchElementException e){
+            return Response.status(Response.Status.NOT_FOUND).entity("Product image with id " + imageId + " from product with id " + productId + " was not found").build();
+        } catch (Exception e){
+            return Response.status(Response.Status.CONFLICT).entity("Product image with id " + imageId + " from product with id " + productId + " could not be deleted").build();
+        }
+    }
+
+
+
+    @GET
+    @Path("/all/{pagesize}/{page}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProducts(@PathParam("pagesize") int pageSize, @PathParam("page") int page){
+        try {
+            return Response.status(Response.Status.OK).entity(productController.getProducts(pageSize, page)).build();
+        } catch (Exception e){
+            return Response.status(Response.Status.NO_CONTENT).build();
+        }
+    }
+}

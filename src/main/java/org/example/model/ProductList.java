@@ -2,21 +2,21 @@ package org.example.model;
 
 import java.util.List;
 
-public class AccountList {
+public class ProductList {
 
-    private List<Account> accounts;
+    private List<Product> products;
     private int totalPages;
 
-    public AccountList(){
+    public ProductList(){
 
     }
 
-    public List<Account> getAccounts() {
-        return accounts;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public int getTotalPages() {
@@ -26,4 +26,5 @@ public class AccountList {
     public void setTotalPages(double totalPages) {
         this.totalPages = (int) Math.ceil(totalPages);
     }
+
 }

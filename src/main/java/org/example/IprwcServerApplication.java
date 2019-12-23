@@ -5,12 +5,14 @@ import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.example.core.*;
 import org.example.resources.AccountResource;
 import org.example.resources.AuthenticationResource;
+import org.example.resources.ProductResource;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.jdbi.v3.core.Jdbi;
 
@@ -32,6 +34,7 @@ public class IprwcServerApplication extends Application<IprwcServerConfiguration
                         new EnvironmentVariableSubstitutor(false)
                 )
         );
+        bootstrap.addBundle(new MultiPartBundle());
     }
 
     @Override
@@ -56,5 +59,6 @@ public class IprwcServerApplication extends Application<IprwcServerConfiguration
 
         environment.jersey().register(new AccountResource(jdbi));
         environment.jersey().register(new AuthenticationResource(jdbi));
+        environment.jersey().register(new ProductResource(jdbi));
     }
 }

@@ -99,12 +99,4 @@ public class Account {
     public void setHouseNumber(String houseNumber) {
         this.houseNumber = houseNumber;
     }
-
-    public int getId() {
-        return accountId;
-    }
-
-    public void setId(int id) {
-        this.accountId = id;
-    }
 }
