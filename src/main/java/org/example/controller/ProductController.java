@@ -7,12 +7,15 @@ import org.example.model.ProductImage;
 import org.example.model.ProductList;
 import org.jdbi.v3.core.Jdbi;
 
+import javax.activation.UnsupportedDataTypeException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -59,7 +62,7 @@ public class ProductController {
         return productList;
     }
 
-    public void deleteProductWithId(int id) throws NoSuchElementException{
+    public void deleteProductWithId(int id) throws NoSuchElementException, IOException {
         try {
             boolean succes = productDAO.deleteProductById(id);
             if (!succes){
@@ -68,6 +71,7 @@ public class ProductController {
         } catch (Exception e){
             throw e;
         }
+        removeProductFolder(generateProductFolderPath(id));
     }
 
     public void deleteProductImageWithId(int productId, int imageId) throws NoSuchElementException{
@@ -81,13 +85,19 @@ public class ProductController {
         }
     }
 
-    public void uploadProduct(InputStream thumbnail, Product product) throws IOException {
+    public void uploadProduct(InputStream thumbnail, Product product, String fileName) throws IOException {
+        if (!checkFileExtension(fileName)){
+            throw new UnsupportedDataTypeException();
+        }
         int id = productDAO.createProduct(product.getProductName(), product.getDescription(), product.getBrand(), product.getPrice(), product.getStock());
         String imageLocation = storeImage(thumbnail, id, "thumbnail.jpg");
         productDAO.setThumbnail(imageLocation, id);
     }
 
-    public void updateProduct(InputStream thumbnail, Product product) throws IOException {
+    public void updateProduct(InputStream thumbnail, Product product, String fileName) throws IOException {
+        if (!checkFileExtension(fileName)){
+            throw new UnsupportedDataTypeException();
+        }
         productDAO.updateProduct(product.getId(), product.getProductName(), product.getDescription(), product.getBrand(), product.getPrice(), product.getStock());
         String imageLocation = storeImage(thumbnail, product.getId(), "thumbnail.jpg");
         productDAO.setThumbnail(imageLocation, product.getId());
@@ -117,8 +127,30 @@ public class ProductController {
         FileUtils.copyInputStreamToFile(inputStream, file);
     }
 
+    private void removeProductFolder(File filepath) throws IOException {
+        FileUtils.deleteDirectory(filepath);
+    }
+
     private String styleLocation(String location){
         return location.replace("\\", "/");
+    }
+
+    private boolean checkFileExtension(String fileName){
+        String[] file = (fileName.split("\\."));
+        String suffix = file[file.length -1].toLowerCase();
+        if (suffix.equals("jpg") || suffix.equals("jpeg") || suffix.equals("png")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    private File generateProductFolderPath(int id){
+        Path path = Paths.get(System.getProperty("user.dir"));
+        path = path.getParent();
+        StringBuilder pathBuilder = new StringBuilder();
+        String location = pathBuilder.append(path.toString()).append("/").append("Products/").append(id).toString();
+        return new File(location);
     }
 
 

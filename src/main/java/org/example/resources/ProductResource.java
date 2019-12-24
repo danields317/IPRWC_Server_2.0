@@ -6,6 +6,8 @@ import org.example.model.Product;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.jdbi.v3.core.Jdbi;
+
+import javax.activation.UnsupportedDataTypeException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,8 +38,10 @@ public class ProductResource {
                                        ){
         try {
             Product product = new Product(productName, description, brand, price, stock);
-            productController.uploadProduct(image, product);
+            productController.uploadProduct(image, product, imageDetail.getFileName());
             return Response.ok().build();
+        } catch (UnsupportedDataTypeException e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Image is not of type jpg, jpeg or png").build();
         } catch (IOException e){
             e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while storing image").build();
@@ -59,12 +63,15 @@ public class ProductResource {
     ){
         try {
             Product product = new Product(id, productName, description, brand, price, stock);
-            productController.updateProduct(image, product);
+            productController.updateProduct(image, product, imageDetail.getFileName());
             return Response.ok().build();
-        } catch (IOException e){
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error while storing image").build();
+        } catch (UnsupportedDataTypeException e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Image is not of type jpg, jpeg or png").build();
+        } catch (IOException e) {
+            return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).entity("Error while storing image").build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Unable to create product due to unforeseen circumstances").build();
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Unable to update product due to unforeseen circumstances").build();
         }
     }
 
