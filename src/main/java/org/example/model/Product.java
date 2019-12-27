@@ -1,10 +1,5 @@
 package org.example.model;
-
-import java.io.File;
-import java.math.BigDecimal;
 import java.util.List;
-
-import static jdk.nashorn.internal.objects.NativeMath.round;
 
 public class Product {
 
@@ -27,6 +22,14 @@ public class Product {
         this.brand = brand;
         this.price = price;
         this.stock = stock;
+    }
+
+    public Product(int id, String productName, String description, String brand, double price) {
+        this.id = id;
+        this.productName = productName;
+        this.description = description;
+        this.brand = brand;
+        this.price = price;
     }
 
     public Product(int id, String productName, String description, String brand, double price, int stock) {

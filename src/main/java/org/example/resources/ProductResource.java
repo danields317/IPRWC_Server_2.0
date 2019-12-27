@@ -6,15 +6,12 @@ import org.example.model.Product;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.jdbi.v3.core.Jdbi;
-
 import javax.activation.UnsupportedDataTypeException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.NoSuchElementException;
 
 @Path("/api/product")
@@ -80,8 +77,21 @@ public class ProductResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProduct(@PathParam("id") int id){
         try{
-            return Response.status(Response.Status.OK).entity(productController.getProductWithId(id)).build();
+            return Response.ok(productController.getProductWithId(id)).build();
         } catch (Exception e){
+            e.printStackTrace();
+            return Response.status(Response.Status.NOT_FOUND).entity("Product with id " + id + " was not found").build();
+        }
+    }
+
+    @GET
+    @Path("/{id}/thumbnail")
+    @Produces("image/jpg")
+    public Response getProductThumbnail(@PathParam("id") int id){
+        try{
+            return Response.ok(productController.getThumbnail(id)).build();
+        } catch (Exception e){
+            e.printStackTrace();
             return Response.status(Response.Status.NOT_FOUND).entity("Product with id " + id + " was not found").build();
         }
     }
@@ -136,8 +146,6 @@ public class ProductResource {
             return Response.status(Response.Status.CONFLICT).entity("Product image with id " + imageId + " from product with id " + productId + " could not be deleted").build();
         }
     }
-
-
 
     @GET
     @Path("/all/{pagesize}/{page}")

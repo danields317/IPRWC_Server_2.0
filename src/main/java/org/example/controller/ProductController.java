@@ -8,6 +8,8 @@ import org.example.model.ProductList;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.activation.UnsupportedDataTypeException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +32,6 @@ public class ProductController {
     public Product getProductWithId(int id) throws SQLException {
         Product product = productDAO.readProductById(id);
         if (product != null){
-            product.setImages(productDAO.readProductImagesById(id));
             return product;
         }else {
             throw new SQLException();
@@ -154,4 +155,13 @@ public class ProductController {
     }
 
 
+    public File getThumbnail(int id) throws IOException {
+        Path path = Paths.get(System.getProperty("user.dir"));
+        path = path.getParent();
+        StringBuilder pathBuilder = new StringBuilder();
+        String location = pathBuilder.append(path.toString()).append("/").append("Products/").append(id).append("/").append("thumbnail.jpg").toString();
+        return new File(location);
+//        FileInputStream inputStream = FileUtils.openInputStream(initialFile);
+//        return inputStream;
+    }
 }
