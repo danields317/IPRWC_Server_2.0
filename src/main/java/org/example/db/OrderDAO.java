@@ -3,12 +3,13 @@ package org.example.db;
 import org.example.mapper.FullOrderMapper;
 import org.example.mapper.OrderMapper;
 import org.example.model.Order;
-import org.example.model.Product;
 import org.jdbi.v3.sqlobject.config.RegisterJoinRowMapper;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -16,7 +17,11 @@ public interface OrderDAO {
 
     @SqlQuery("SELECT * FROM customer_order LIMIT :pagesize OFFSET :offset")
     @RegisterJoinRowMapper(OrderMapper.class)
-    List<Order> getProductList(@Bind("pagesize") int pageSize, @Bind("offset") int offset);
+    List<Order> getOrderList(@Bind("pagesize") int pageSize, @Bind("offset") int offset);
+
+    @SqlQuery("SELECT * FROM customer_order LIMIT :pagesize OFFSET :offset WHERE account_id = : accountId")
+    @RegisterRowMapper(OrderMapper.class)
+    List<Order> getPersonalOrderList(@Bind("accountId") int accountId);
 
     @SqlQuery("SELECT co.id, co.account_id, co.delivery_city, co.delivery_address, co.delivery_number, co.delivery_date, coi.product_id, coi.amount, p.product_name, p.description, p.brand, p.price\n" +
             "FROM customer_order co JOIN customer_order_item coi ON co.id = coi.order_id\n" +
@@ -24,6 +29,30 @@ public interface OrderDAO {
             "WHERE co.id = :orderId")
     @RegisterRowMapper(FullOrderMapper.class)
     List<Order> getOrder(@Bind("orderId") int orderId);
+
+    @SqlUpdate("INSERT INTO customer_order (account_id, delivery_city, delivery_address, delivery_number, delivery_date) VALUES " +
+            "(?, ?, ?, ? ,?)")
+    @GetGeneratedKeys("id")
+    int addOrder(int accountId, String deliveryCity, String deliveryAddress, String deliveryNumber, DateTime deliveryDate);
+
+    @SqlUpdate("INSERT INTO customer_order_item VALUES (?, ?, ?)")
+    int addOrderItem(int orderId, int productId, int amount);
+
+    @SqlUpdate("UPDATE customer_order SET delivery_city = :deliveryCity, delivery_address = :deliveryAddress, " +
+            "delivery_number = :deliveryNumber, delivery_date = :deliveryDate WHERE id = :id")
+    boolean updateOrder(@Bind("id") int id, @Bind("deliveryCity") String deliveryCity, @Bind("deliveryAddress") String deliveryAddress,
+                        @Bind("deliveryNumber") String deliveryNumber, @Bind("deliveryDate") DateTime deliveryDate);
+
+    @SqlUpdate("UPDATE customer_order_item SET amount = :amount WHERE order_id = :orderId AND product_id = :productId")
+    boolean updateOrderItem(@Bind("orderId") int orderId, @Bind("productId") int productId, @Bind("amount") int amount);
+
+    @SqlUpdate("DELETE FROM customer_order WHERE id = :orderId")
+    boolean deleteOrder(@Bind("orderId") int orderId);
+
+    @SqlUpdate("DELETE FROM customer_order_item WHERE order_id = :orderId AND product_id = :productId")
+    boolean deleteOrderItem(@Bind("orderId") int orderId, @Bind("productId") int productId);
+
+
 
 
 }

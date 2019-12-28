@@ -1,5 +1,7 @@
 package org.example.model;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,18 +11,20 @@ public class Order {
     private int id;
     private int accountId;
     private String deliveryCity;
-    private String deliveryStreet;
+    private String deliveryAddress;
     private String deliveryNumber;
-    private Date deliveryDate;
+    private DateTime deliveryDate;
     List<OrderItem> items;
 
-    public Order(int id, int accountId, String deliveryCity, String deliveryStreet, String deliveryNumber, Date deliveryDate) {
+    public Order(){}
+
+    public Order(int id, int accountId, String deliveryCity, String deliveryAddress, String deliveryNumber, Date deliveryDate) {
         this.id = id;
         this.accountId = accountId;
         this.deliveryCity = deliveryCity;
-        this.deliveryStreet = deliveryStreet;
+        this.deliveryAddress = deliveryAddress;
         this.deliveryNumber = deliveryNumber;
-        this.deliveryDate = deliveryDate;
+        this.deliveryDate = new DateTime(deliveryDate);
         this.items = new ArrayList<>();
     }
 
@@ -52,12 +56,12 @@ public class Order {
         this.deliveryCity = deliveryCity;
     }
 
-    public String getDeliveryStreet() {
-        return deliveryStreet;
+    public String getDeliveryAddress() {
+        return deliveryAddress;
     }
 
-    public void setDeliveryStreet(String deliveryStreet) {
-        this.deliveryStreet = deliveryStreet;
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
 
     public String getDeliveryNumber() {
@@ -68,11 +72,11 @@ public class Order {
         this.deliveryNumber = deliveryNumber;
     }
 
-    public Date getDeliveryDate() {
+    public DateTime getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(DateTime deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 
