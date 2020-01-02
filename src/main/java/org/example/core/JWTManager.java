@@ -40,7 +40,7 @@ public class JWTManager {
                     .withIssuer(issuerName)
                     .withNotBefore(new Date())
                     .withIssuedAt(new Date())
-                    .withExpiresAt(new DateTime().plusDays(1).toDate())
+                    .withExpiresAt(new DateTime().plusMinutes(2).toDate())
                     .withClaim("accountId", accountId)
                     .sign(algorithm);
         }catch (JWTCreationException e){

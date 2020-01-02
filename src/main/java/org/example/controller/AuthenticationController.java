@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.example.core.JWTManager;
 import org.example.core.PasswordManager;
 import org.example.db.AccountDAO;
@@ -7,8 +9,10 @@ import org.example.model.Account;
 import org.example.model.Authentication;
 import org.example.model.JsonToken;
 import org.jdbi.v3.core.Jdbi;
+import org.joda.time.DateTime;
 
 import javax.naming.AuthenticationException;
+import java.util.Date;
 
 public class AuthenticationController {
 
@@ -33,6 +37,16 @@ public class AuthenticationController {
         else {
             throw new AuthenticationException();
         }
+    }
+
+    public JsonToken refreshAuthentication(String jsonToken) throws AuthenticationException {
+        jsonToken = stripToken(jsonToken);
+        DecodedJWT token = jwtManager.decodeJwt(jsonToken);
+        return new JsonToken(jwtManager.createJwtToken(token.getClaim("accountId").asInt()));
+    }
+
+    private String stripToken(String token){
+        return token.split("Bearer ")[1];
     }
 
 }
