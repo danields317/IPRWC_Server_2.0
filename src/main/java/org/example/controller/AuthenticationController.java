@@ -5,6 +5,7 @@ import org.example.core.PasswordManager;
 import org.example.db.AccountDAO;
 import org.example.model.Account;
 import org.example.model.Authentication;
+import org.example.model.JsonToken;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.naming.AuthenticationException;
@@ -21,13 +22,13 @@ public class AuthenticationController {
         this.jwtManager = JWTManager.getJwtManager();
     }
 
-    public String authenticate(Authentication authentication) throws AuthenticationException {
+    public JsonToken authenticate(Authentication authentication) throws AuthenticationException {
         Account dbAccount = accountDAO.readAccountByEmail(authentication.getEmailAddress());
         if (dbAccount == null){
             throw new AuthenticationException();
         }
         else if (passwordManager.validatePassword(authentication.getPassword(), dbAccount.getHash())){
-            return jwtManager.createJwtToken(dbAccount.getAccountId());
+            return new JsonToken(jwtManager.createJwtToken(dbAccount.getAccountId()));
         }
         else {
             throw new AuthenticationException();

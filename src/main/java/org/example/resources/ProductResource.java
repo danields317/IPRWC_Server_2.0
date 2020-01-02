@@ -7,6 +7,8 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.jdbi.v3.core.Jdbi;
 import javax.activation.UnsupportedDataTypeException;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -79,7 +81,6 @@ public class ProductResource {
         try{
             return Response.ok(productController.getProductWithId(id)).build();
         } catch (Exception e){
-            e.printStackTrace();
             return Response.status(Response.Status.NOT_FOUND).entity("Product with id " + id + " was not found").build();
         }
     }
