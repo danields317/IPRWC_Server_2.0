@@ -91,7 +91,6 @@ public class ProductResource {
         try{
             return Response.ok(productController.getThumbnail(id)).build();
         } catch (Exception e){
-            e.printStackTrace();
             return Response.status(Response.Status.NOT_FOUND).entity("Product with id " + id + " was not found").build();
         }
     }

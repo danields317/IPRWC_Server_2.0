@@ -155,13 +155,20 @@ public class ProductController {
     }
 
 
-    public File getThumbnail(int id) throws IOException {
-        Path path = Paths.get(System.getProperty("user.dir"));
-        path = path.getParent();
-        StringBuilder pathBuilder = new StringBuilder();
-        String location = pathBuilder.append(path.toString()).append("/").append("Products/").append(id).append("/").append("thumbnail.jpg").toString();
-        return new File(location);
-//        FileInputStream inputStream = FileUtils.openInputStream(initialFile);
-//        return inputStream;
+    public File getThumbnail(int id) throws FileNotFoundException {
+        try {
+            Path path = Paths.get(System.getProperty("user.dir"));
+            path = path.getParent();
+            StringBuilder pathBuilder = new StringBuilder();
+            String location = pathBuilder.append(path.toString()).append("/").append("Products/").append(id).append("/").append("thumbnail.jpg").toString();
+            File file = new File(location);
+            if(!file.exists()){
+                throw new FileNotFoundException("File not found");
+            }
+            return file;
+        } catch (Exception e){
+            throw e;
+        }
+
     }
 }
