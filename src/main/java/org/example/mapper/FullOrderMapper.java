@@ -42,7 +42,7 @@ public class FullOrderMapper implements RowMapper<Order> {
     private void addOrderItem(ResultSet rs) throws SQLException {
         OrderItem orderItem = new OrderItem(new Product(
                 rs.getInt("product_id"), rs.getString("product_name"), rs.getString("description"),
-                rs.getString("brand"), rs.getDouble("price")
+                rs.getString("brand"), rs.getDouble("price"), rs.getString("category")
         ), rs.getInt("amount"));
         this.order.setItem(orderItem);
     }

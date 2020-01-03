@@ -11,37 +11,41 @@ public class Product {
     private int stock;
     private String thumbnail;
     private List<ProductImage> images;
+    private String category;
 
     public Product(){
 
     }
 
-    public Product(String productName, String description, String brand, double price, int stock) {
+    public Product(String productName, String description, String brand, double price, int stock, String category) {
         this.productName = productName;
         this.description = description;
         this.brand = brand;
         this.price = price;
         this.stock = stock;
+        this.category = category;
     }
 
-    public Product(int id, String productName, String description, String brand, double price) {
+    public Product(int id, String productName, String description, String brand, double price, String category) {
         this.id = id;
         this.productName = productName;
         this.description = description;
         this.brand = brand;
         this.price = price;
+        this.category = category;
     }
 
-    public Product(int id, String productName, String description, String brand, double price, int stock) {
+    public Product(int id, String productName, String description, String brand, double price, int stock, String category) {
         this.id = id;
         this.productName = productName;
         this.description = description;
         this.brand = brand;
         this.price = price;
         this.stock = stock;
+        this.category = category;
     }
 
-    public Product(int id, String productName, String description, String brand, double price, int stock, String thumbnail) {
+    public Product(int id, String productName, String description, String brand, double price, int stock, String thumbnail, String category) {
         this.id = id;
         this.productName = productName;
         this.description = description;
@@ -49,6 +53,7 @@ public class Product {
         this.price = price;
         this.stock = stock;
         this.thumbnail = thumbnail;
+        this.category = category;
     }
 
     public int getId() {
@@ -113,5 +118,13 @@ public class Product {
 
     public void setImages(List<ProductImage> images) {
         this.images = images;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

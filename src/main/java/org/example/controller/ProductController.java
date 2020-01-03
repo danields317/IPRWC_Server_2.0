@@ -8,16 +8,10 @@ import org.example.model.ProductList;
 import org.jdbi.v3.core.Jdbi;
 
 import javax.activation.UnsupportedDataTypeException;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -47,7 +41,16 @@ public class ProductController {
         }
     }
 
-    public ProductList getProducts(int pageSize, int page) throws SQLException {
+    public ProductList getProducts(String type, int pageSize, int page) throws SQLException {
+        if (type.equals("all")) {
+            return getAllProducts(pageSize, page);
+        } else {
+            return getProductsByType(type, pageSize, page);
+        }
+
+    }
+
+    private ProductList getAllProducts(int pageSize, int page) throws SQLException {
         int offset = ((page -1) * pageSize);
         ProductList productList = new ProductList();
         try {
@@ -57,6 +60,22 @@ public class ProductController {
         }
         try {
             productList.setTotalPages(productDAO.getMaxPages(pageSize));
+        } catch (Exception e){
+            throw new SQLException();
+        }
+        return productList;
+    }
+
+    private ProductList getProductsByType(String type, int pageSize, int page) throws SQLException {
+        int offset = ((page -1) * pageSize);
+        ProductList productList = new ProductList();
+        try {
+            productList.setProducts(productDAO.getProductListWithCategory(type, pageSize, offset));
+        } catch (Exception e){
+            throw new SQLException();
+        }
+        try {
+            productList.setTotalPages(productDAO.getMaxPagesWithCategory(type, pageSize));
         } catch (Exception e){
             throw new SQLException();
         }

@@ -33,10 +33,11 @@ public class ProductResource {
                                        @FormDataParam("description") String description,
                                        @FormDataParam("brand") String brand,
                                        @FormDataParam("price") double price,
-                                       @FormDataParam("stock")int stock
+                                       @FormDataParam("stock") int stock,
+                                       @FormDataParam("category") String category
                                        ){
         try {
-            Product product = new Product(productName, description, brand, price, stock);
+            Product product = new Product(productName, description, brand, price, stock, category);
             productController.uploadProduct(image, product, imageDetail.getFileName());
             return Response.ok().build();
         } catch (UnsupportedDataTypeException e){
@@ -58,10 +59,11 @@ public class ProductResource {
                                        @FormDataParam("description") String description,
                                        @FormDataParam("brand") String brand,
                                        @FormDataParam("price") double price,
-                                       @FormDataParam("stock")int stock
+                                       @FormDataParam("stock")int stock,
+                                       @FormDataParam("category") String category
     ){
         try {
-            Product product = new Product(id, productName, description, brand, price, stock);
+            Product product = new Product(id, productName, description, brand, price, stock, category);
             productController.updateProduct(image, product, imageDetail.getFileName());
             return Response.ok().build();
         } catch (UnsupportedDataTypeException e){
@@ -148,11 +150,11 @@ public class ProductResource {
     }
 
     @GET
-    @Path("/all/{pagesize}/{page}")
+    @Path("/{type}/{pagesize}/{page}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProducts(@PathParam("pagesize") int pageSize, @PathParam("page") int page){
+    public Response getProducts(@PathParam("type") String type, @PathParam("pagesize") int pageSize, @PathParam("page") int page){
         try {
-            return Response.status(Response.Status.OK).entity(productController.getProducts(pageSize, page)).build();
+            return Response.status(Response.Status.OK).entity(productController.getProducts(type, pageSize, page)).build();
         } catch (Exception e){
             return Response.status(Response.Status.NO_CONTENT).build();
         }

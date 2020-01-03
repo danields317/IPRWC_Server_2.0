@@ -18,8 +18,15 @@ public interface ProductDAO {
     @RegisterRowMapper(ProductMapper.class)
     List<Product> getProductList(@Bind("pagesize") int pageSize, @Bind("offset") int offset);
 
+    @SqlQuery("SELECT * FROM product WHERE category = :category LIMIT :pagesize OFFSET :offset")
+    @RegisterRowMapper(ProductMapper.class)
+    List<Product> getProductListWithCategory(@Bind("category") String category, @Bind("pagesize") int pageSize, @Bind("offset") int offset);
+
     @SqlQuery("SELECT (COUNT(*)::DECIMAL / :pagesize) FROM product")
     double getMaxPages(@Bind("pagesize") int pageSize);
+
+    @SqlQuery("SELECT (COUNT(*)::DECIMAL / :pagesize) FROM product WHERE category = :category")
+    double getMaxPagesWithCategory(@Bind("category") String category, @Bind("pagesize") int pageSize);
 
     @SqlQuery("SELECT * FROM product WHERE id = :id")
     @RegisterRowMapper(ProductMapper.class)
