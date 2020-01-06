@@ -14,4 +14,12 @@ public class Authentication {
         return password;
     }
 
+    public Authentication() {
+
+    }
+
+    public Authentication(String emailAddress, String password) {
+        this.emailAddress = emailAddress;
+        this.password = password;
+    }
 }

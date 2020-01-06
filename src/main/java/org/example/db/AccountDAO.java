@@ -2,16 +2,13 @@ package org.example.db;
 
 import org.example.mapper.AccountMapper;
 import org.example.model.Account;
-import org.jdbi.v3.sqlobject.GenerateSqlObject;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
-import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.postgresql.util.PSQLException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RegisterRowMapper(AccountMapper.class)
 public interface AccountDAO {

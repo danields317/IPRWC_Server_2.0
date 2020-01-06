@@ -23,7 +23,9 @@ public class AccountController {
 
     public Account getPersonalAccount(String token) throws JWTDecodeException{
         int personalId = getId(token);
-        return accountDAO.readAccountById(personalId);
+        Account account = accountDAO.readAccountById(personalId);
+        account.setHash(null);
+        return account;
     }
 
     public void updatePersonalAccount(String token, Account account) throws JWTDecodeException, SQLException{
@@ -60,6 +62,7 @@ public class AccountController {
     public Account getAccountWithId(int id) throws SQLException {
         Account account = accountDAO.readAccountById(id);
         if (account != null){
+            account.setHash(null);
             return account;
         }else {
             throw new SQLException();
