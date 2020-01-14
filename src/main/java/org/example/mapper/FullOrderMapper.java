@@ -8,7 +8,6 @@ import org.jdbi.v3.core.statement.StatementContext;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public class FullOrderMapper implements RowMapper<Order> {
 
@@ -17,6 +16,7 @@ public class FullOrderMapper implements RowMapper<Order> {
 
     @Override
     public Order map(ResultSet rs, StatementContext ctx) throws SQLException {
+        System.out.println("start");
         if (first){
             System.out.println(1);
             first = false;

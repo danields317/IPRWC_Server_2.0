@@ -64,6 +64,9 @@ public class ProductResource {
     ){
         try {
             Product product = new Product(id, productName, description, brand, price, stock, category);
+            System.out.println(image);
+            System.out.println(imageDetail.getName());
+            System.out.println(imageDetail.getType());
             productController.updateProduct(image, product, imageDetail.getFileName());
             return Response.ok().build();
         } catch (UnsupportedDataTypeException e){

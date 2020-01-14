@@ -12,6 +12,11 @@ public class OrderMapper implements RowMapper<Order> {
 
     @Override
     public Order map(ResultSet rs, StatementContext ctx) throws SQLException {
-        return null;
+        return new Order(rs.getInt("id"),
+                rs.getInt("account_id"),
+                rs.getString("delivery_city"),
+                rs.getString("delivery_address"),
+                rs.getString("delivery_number"),
+                rs.getDate("delivery_date"));
     }
 }

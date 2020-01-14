@@ -91,6 +91,17 @@ public class OrderResource {
     }
 
     @GET
+    @Path("/all/{pagesize}/{page}")
+    public Response getOrderList(@PathParam("pagesize") int pageSize, @PathParam("page") int page) {
+        try {
+            return Response.status(Response.Status.OK).entity(orderController.getOrderList(pageSize, page)).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @GET
     @Path("/{id}")
     public Response getOrder(@PathParam("id") int orderId){
         try {

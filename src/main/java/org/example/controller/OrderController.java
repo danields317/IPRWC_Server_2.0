@@ -3,6 +3,7 @@ package org.example.controller;
 import org.example.db.OrderDAO;
 import org.example.model.Order;
 import org.example.model.OrderItem;
+import org.example.model.OrderList;
 import org.jdbi.v3.core.Jdbi;
 
 import java.sql.SQLException;
@@ -22,9 +23,22 @@ public class OrderController {
             List<Order> tempOrder = orderDAO.getOrder(id);
             return tempOrder.get(tempOrder.size() -1);
         } catch (Exception e){
+            e.printStackTrace();
             throw new SQLException();
         }
+    }
 
+    public OrderList getOrderList(int pageSize, int page) throws SQLException {
+        int offset = ((page -1) * pageSize);
+        OrderList orderList = new OrderList();
+        try {
+            orderList.setOrders(orderDAO.getOrderList(pageSize, offset));
+            orderList.setTotalPages(orderDAO.getMaxPages(pageSize));
+            return orderList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SQLException();
+        }
     }
 
 

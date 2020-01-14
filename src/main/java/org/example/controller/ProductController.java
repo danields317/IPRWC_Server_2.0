@@ -109,7 +109,8 @@ public class ProductController {
         if (!checkFileExtension(fileName)){
             throw new UnsupportedDataTypeException();
         }
-        int id = productDAO.createProduct(product.getProductName(), product.getDescription(), product.getBrand(), product.getPrice(), product.getStock());
+        int id = productDAO.createProduct(product.getProductName(), product.getDescription(), product.getBrand(),
+                product.getPrice(), product.getStock(), product.getCategory());
         String imageLocation = storeImage(thumbnail, id, "thumbnail.jpg");
         productDAO.setThumbnail(imageLocation, id);
     }
@@ -118,7 +119,8 @@ public class ProductController {
         if (!checkFileExtension(fileName)){
             throw new UnsupportedDataTypeException();
         }
-        productDAO.updateProduct(product.getId(), product.getProductName(), product.getDescription(), product.getBrand(), product.getPrice(), product.getStock());
+        productDAO.updateProduct(product.getId(), product.getProductName(), product.getDescription(), product.getBrand(),
+                product.getPrice(), product.getStock(), product.getCategory());
         String imageLocation = storeImage(thumbnail, product.getId(), "thumbnail.jpg");
         productDAO.setThumbnail(imageLocation, product.getId());
     }
@@ -156,6 +158,7 @@ public class ProductController {
     }
 
     private boolean checkFileExtension(String fileName){
+        System.out.println(fileName);
         String[] file = (fileName.split("\\."));
         String suffix = file[file.length -1].toLowerCase();
         if (suffix.equals("jpg") || suffix.equals("jpeg") || suffix.equals("png")){

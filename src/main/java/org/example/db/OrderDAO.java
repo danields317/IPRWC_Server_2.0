@@ -15,16 +15,20 @@ import java.util.List;
 
 public interface OrderDAO {
 
-    @SqlQuery("SELECT * FROM customer_order LIMIT :pagesize OFFSET :offset")
-    @RegisterJoinRowMapper(OrderMapper.class)
+    @SqlQuery("SELECT (COUNT(*)::DECIMAL / :pagesize) FROM customer_order")
+    double getMaxPages(@Bind("pagesize") int pageSize);
+
+    @SqlQuery("SELECT * FROM customer_order ORDER BY delivery_date LIMIT :pagesize OFFSET :offset")
+    @RegisterRowMapper(OrderMapper.class)
     List<Order> getOrderList(@Bind("pagesize") int pageSize, @Bind("offset") int offset);
 
     @SqlQuery("SELECT * FROM customer_order LIMIT :pagesize OFFSET :offset WHERE account_id = : accountId")
     @RegisterRowMapper(OrderMapper.class)
     List<Order> getPersonalOrderList(@Bind("accountId") int accountId);
 
-    @SqlQuery("SELECT co.id, co.account_id, co.delivery_city, co.delivery_address, co.delivery_number, co.delivery_date, coi.product_id, coi.amount, p.product_name, p.description, p.brand, p.price\n" +
-            "FROM customer_order co JOIN customer_order_item coi ON co.id = coi.order_id\n" +
+    @SqlQuery("SELECT co.id, co.account_id, co.delivery_city, co.delivery_address, co.delivery_number, co.delivery_date, coi.product_id, coi.amount, " +
+            "p.product_name, p.description, p.brand, p.price,\n" +
+            "p.category FROM customer_order co JOIN customer_order_item coi ON co.id = coi.order_id\n" +
             "JOIN product p ON p.id = coi.product_id\n" +
             "WHERE co.id = :orderId")
     @RegisterRowMapper(FullOrderMapper.class)

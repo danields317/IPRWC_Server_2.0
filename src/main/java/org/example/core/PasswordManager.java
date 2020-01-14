@@ -14,5 +14,4 @@ public class PasswordManager {
     public boolean validatePassword(String inputPassword, String hash){
         return BCrypt.checkpw(inputPassword, hash);
     }
-
 }
