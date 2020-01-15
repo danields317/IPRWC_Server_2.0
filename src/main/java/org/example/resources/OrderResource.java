@@ -6,6 +6,7 @@ import org.example.model.Order;
 import org.example.model.OrderItem;
 import org.jdbi.v3.core.Jdbi;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -37,6 +38,7 @@ public class OrderResource {
     }
 
     @PUT
+    @RolesAllowed("Admin")
     public Response updateOrder(Order order){
         try {
             orderController.updateOrder(order);
@@ -50,6 +52,7 @@ public class OrderResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed("Admin")
     public Response updateOrderItem(@PathParam("id") int id, OrderItem orderItem){
         try {
             orderController.updateOrderItem(id, orderItem);
@@ -64,6 +67,7 @@ public class OrderResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed("Admin")
     public Response deleteOrder(@PathParam("id") int id){
         try {
             orderController.deleteOrder(id);
@@ -78,7 +82,8 @@ public class OrderResource {
 
     @DELETE
     @Path("/{id}/{productId}")
-    public Response deleteOrder(@PathParam("id") int id, @PathParam("productId") int productId){
+    @RolesAllowed("Admin")
+    public Response deleteOrderItem(@PathParam("id") int id, @PathParam("productId") int productId){
         try {
             orderController.deleteOrderItem(id, productId);
             return Response.status(Response.Status.NO_CONTENT).build();
@@ -92,6 +97,7 @@ public class OrderResource {
 
     @GET
     @Path("/all/{pagesize}/{page}")
+    @RolesAllowed("Admin")
     public Response getOrderList(@PathParam("pagesize") int pageSize, @PathParam("page") int page) {
         try {
             return Response.status(Response.Status.OK).entity(orderController.getOrderList(pageSize, page)).build();
@@ -103,6 +109,7 @@ public class OrderResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed("Admin")
     public Response getOrder(@PathParam("id") int orderId){
         try {
             return Response.ok().entity(orderController.getOrder(orderId)).build();

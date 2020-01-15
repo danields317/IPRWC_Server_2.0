@@ -27,6 +27,7 @@ public class ProductResource {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @RolesAllowed("Admin")
     public Response uploadProduct(@FormDataParam("thumbnail")InputStream image,
                                        @FormDataParam("thumbnail")FormDataContentDisposition imageDetail,
                                        @FormDataParam("productName") String productName,
@@ -52,6 +53,7 @@ public class ProductResource {
 
     @PUT
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @RolesAllowed("Admin")
     public Response updateProduct(@FormDataParam("thumbnail")InputStream image,
                                        @FormDataParam("thumbnail")FormDataContentDisposition imageDetail,
                                        @FormDataParam("id") int id,
@@ -104,6 +106,7 @@ public class ProductResource {
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("Admin")
     public Response deleteProduct(@PathParam("id") int id){
         try{
             productController.deleteProductWithId(id);
@@ -118,6 +121,7 @@ public class ProductResource {
     @POST
     @Path("/img/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("Admin")
     public Response uploadProductImage(@PathParam("id") int productId){
         try {
             productController.uploadProductImage(productId);
@@ -141,6 +145,7 @@ public class ProductResource {
     @DELETE
     @Path("/img/{productId}/{imageId}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("Admin")
     public Response deleteProductImage(@PathParam("productId") int productId, @PathParam("imageId") int imageId){
         try {
             productController.deleteProductImageWithId(productId, imageId);
