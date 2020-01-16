@@ -16,17 +16,13 @@ public class FullOrderMapper implements RowMapper<Order> {
 
     @Override
     public Order map(ResultSet rs, StatementContext ctx) throws SQLException {
-        System.out.println("start");
         if (first){
-            System.out.println(1);
             first = false;
             createOrder(rs);
         } else {
-            System.out.println(2);
             try {
                 addOrderItem(rs);
             } catch (Exception e){
-                System.out.println("error");
                 return this.order;
             }
         }

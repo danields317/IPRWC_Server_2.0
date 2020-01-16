@@ -158,7 +158,6 @@ public class ProductController {
     }
 
     private boolean checkFileExtension(String fileName){
-        System.out.println(fileName);
         String[] file = (fileName.split("\\."));
         String suffix = file[file.length -1].toLowerCase();
         if (suffix.equals("jpg") || suffix.equals("jpeg") || suffix.equals("png")){
