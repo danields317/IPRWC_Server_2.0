@@ -52,7 +52,6 @@ public class OrderController {
         } catch (Exception e){
             throw e;
         }
-
     }
 
     public void updateOrder(Order order) {

@@ -116,13 +116,15 @@ public class ProductController {
     }
 
     public void updateProduct(InputStream thumbnail, Product product, String fileName) throws IOException {
-        if (!checkFileExtension(fileName)){
+        if (fileName == null) {
+            this.updateProductDetails(product);
+        } else if (!checkFileExtension(fileName)){
             throw new UnsupportedDataTypeException();
+        } else {
+            this.updateProductDetails(product);
+            String imageLocation = storeImage(thumbnail, product.getId(), "thumbnail.jpg");
+            productDAO.setThumbnail(imageLocation, product.getId());
         }
-        productDAO.updateProduct(product.getId(), product.getProductName(), product.getDescription(), product.getBrand(),
-                product.getPrice(), product.getStock(), product.getCategory());
-        String imageLocation = storeImage(thumbnail, product.getId(), "thumbnail.jpg");
-        productDAO.setThumbnail(imageLocation, product.getId());
     }
 
     public String storeImage(InputStream image, int product_id, String fileName) throws IOException {
@@ -190,6 +192,14 @@ public class ProductController {
         } catch (Exception e){
             throw e;
         }
+    }
 
+    private void updateProductDetails(Product product) {
+        try {
+            productDAO.updateProduct(product.getId(), product.getProductName(), product.getDescription(), product.getBrand(),
+                    product.getPrice(), product.getStock(), product.getCategory());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }

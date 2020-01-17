@@ -1,11 +1,9 @@
 package org.example.resources;
 
-
 import org.example.controller.OrderController;
 import org.example.model.Order;
 import org.example.model.OrderItem;
 import org.jdbi.v3.core.Jdbi;
-
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

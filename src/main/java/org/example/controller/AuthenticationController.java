@@ -1,6 +1,5 @@
 package org.example.controller;
 
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.example.core.JWTManager;
 import org.example.core.PasswordManager;
@@ -9,10 +8,7 @@ import org.example.model.Account;
 import org.example.model.Authentication;
 import org.example.model.JsonToken;
 import org.jdbi.v3.core.Jdbi;
-import org.joda.time.DateTime;
-
 import javax.naming.AuthenticationException;
-import java.util.Date;
 
 public class AuthenticationController {
 

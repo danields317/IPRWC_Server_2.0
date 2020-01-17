@@ -1,14 +1,8 @@
 package org.example.resources;
 
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import org.example.controller.AuthenticationController;
-import org.example.core.JWTManager;
-import org.example.model.Account;
 import org.example.model.Authentication;
-import org.example.model.JsonToken;
 import org.jdbi.v3.core.Jdbi;
-
 import javax.annotation.security.PermitAll;
 import javax.naming.AuthenticationException;
 import javax.ws.rs.*;

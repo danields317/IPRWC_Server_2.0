@@ -61,11 +61,28 @@ public class AccountResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addAccount(Account account){
+    public Response addCustomerAccount(Account account){
+        try {
+            accountController.createCustomerAccount(account);
+            return Response.status(Response.Status.CREATED).build();
+        } catch (NullPointerException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Missing or invalid parameters").build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.CONFLICT).entity("Unable to create account").build();
+        }
+    }
+
+    @POST
+    @Path("/admin")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed("Admin")
+    public Response addAdminAccount(Account account){
         try {
             accountController.createAccount(account);
             return Response.status(Response.Status.CREATED).build();
-        } catch (SQLException e) {
+        } catch (NullPointerException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Missing or invalid parameters").build();
+        } catch (Exception e) {
             return Response.status(Response.Status.CONFLICT).entity("Unable to create account").build();
         }
     }
@@ -88,6 +105,8 @@ public class AccountResource {
         try {
             accountController.updateAccountWithId(accountId, account);
             return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (NullPointerException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Missing or invalid parameters").build();
         } catch (NoSuchElementException e) {
             return Response.status(Response.Status.NOT_FOUND).entity("Account with id " + accountId + " was not found").build();
         } catch (Exception e) {
