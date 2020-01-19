@@ -1,5 +1,8 @@
 package org.example.controller;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import org.example.core.JWTManager;
 import org.example.db.OrderDAO;
 import org.example.model.Order;
 import org.example.model.OrderItem;
@@ -23,6 +26,19 @@ public class OrderController {
             List<Order> tempOrder = orderDAO.getOrder(id);
             return tempOrder.get(tempOrder.size() -1);
         } catch (Exception e){
+            throw new SQLException();
+        }
+    }
+
+    public OrderList getPersonalOrderList(int pageSize, int page, String token) throws SQLException {
+        int personalId = getId(token);
+        int offset = ((page -1) * pageSize);
+        OrderList orderList = new OrderList();
+        try {
+            orderList.setOrders(orderDAO.getPersonalOrderList(pageSize, offset, personalId));
+            orderList.setTotalPages(orderDAO.getMaxPages(pageSize));
+            return orderList;
+        } catch (Exception e) {
             e.printStackTrace();
             throw new SQLException();
         }
@@ -97,6 +113,17 @@ public class OrderController {
         } catch (Exception e){
             throw e;
         }
+    }
+
+    private int getId(String token) throws JWTDecodeException {
+        token = stripToken(token);
+        JWTManager jwtManager = JWTManager.getJwtManager();
+        DecodedJWT jwt = jwtManager.decodeJwt(token);
+        return jwt.getClaim("accountId").asInt();
+    }
+
+    private String stripToken(String token){
+        return token.split("Bearer ")[1];
     }
 
 }

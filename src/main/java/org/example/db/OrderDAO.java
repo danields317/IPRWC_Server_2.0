@@ -22,9 +22,9 @@ public interface OrderDAO {
     @RegisterRowMapper(OrderMapper.class)
     List<Order> getOrderList(@Bind("pagesize") int pageSize, @Bind("offset") int offset);
 
-    @SqlQuery("SELECT * FROM customer_order LIMIT :pagesize OFFSET :offset WHERE account_id = : accountId")
+    @SqlQuery("SELECT * FROM customer_order WHERE account_id = :accountId ORDER BY delivery_date LIMIT :pagesize OFFSET :offset")
     @RegisterRowMapper(OrderMapper.class)
-    List<Order> getPersonalOrderList(@Bind("accountId") int accountId);
+    List<Order> getPersonalOrderList(@Bind("pagesize") int pageSize, @Bind("offset") int offset, @Bind("accountId") int accountId);
 
     @SqlQuery("SELECT co.id, co.account_id, co.delivery_city, co.delivery_address, co.delivery_number, co.delivery_date, coi.product_id, coi.amount, " +
             "p.product_name, p.description, p.brand, p.price,\n" +

@@ -4,6 +4,8 @@ import org.example.controller.OrderController;
 import org.example.model.Order;
 import org.example.model.OrderItem;
 import org.jdbi.v3.core.Jdbi;
+
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -94,13 +96,24 @@ public class OrderResource {
     }
 
     @GET
+    @Path("/{pagesize}/{page}")
+    @PermitAll
+    public Response getPersonalOrders(@PathParam("pagesize") int pageSize, @PathParam("page") int page, @HeaderParam("Authorization") String token) {
+        try {
+            return Response.status(Response.Status.OK).entity(orderController.getPersonalOrderList(pageSize, page, token)).build();
+        } catch (Exception e) {
+
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @GET
     @Path("/all/{pagesize}/{page}")
     @RolesAllowed("Admin")
     public Response getOrderList(@PathParam("pagesize") int pageSize, @PathParam("page") int page) {
         try {
             return Response.status(Response.Status.OK).entity(orderController.getOrderList(pageSize, page)).build();
         } catch (Exception e) {
-            e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
