@@ -128,4 +128,15 @@ public class OrderResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Order with id " + orderId + " was not found").build();
         }
     }
+
+    @GET
+    @Path("/personal/{id}")
+    @PermitAll
+    public Response getPersonalOrder(@PathParam("id") int orderId, @HeaderParam("Authorization") String token){
+        try {
+            return Response.ok().entity(orderController.getPersonalOrder(orderId, token)).build();
+        } catch (SQLException e){
+            return Response.status(Response.Status.NOT_FOUND).entity("Order with id " + orderId + " was not found").build();
+        }
+    }
 }

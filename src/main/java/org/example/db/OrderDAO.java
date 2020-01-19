@@ -3,7 +3,6 @@ package org.example.db;
 import org.example.mapper.FullOrderMapper;
 import org.example.mapper.OrderMapper;
 import org.example.model.Order;
-import org.jdbi.v3.sqlobject.config.RegisterJoinRowMapper;
 import org.jdbi.v3.sqlobject.config.RegisterRowMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;

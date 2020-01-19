@@ -30,6 +30,21 @@ public class OrderController {
         }
     }
 
+    public Order getPersonalOrder(int id, String token) throws SQLException {
+        int personalId = getId(token);
+        try {
+            List<Order> tempOrder = orderDAO.getOrder(id);
+            Order order = tempOrder.get(tempOrder.size() -1);
+            if (order.getAccountId() == personalId) {
+                return order;
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e){
+            throw new SQLException();
+        }
+    }
+
     public OrderList getPersonalOrderList(int pageSize, int page, String token) throws SQLException {
         int personalId = getId(token);
         int offset = ((page -1) * pageSize);
