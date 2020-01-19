@@ -139,7 +139,7 @@ public class AccountController {
                 account.getCity().replaceAll(" ","").isEmpty() ||
                 account.getStreet().replaceAll(" ","").isEmpty() ||
                 account.getHouseNumber().replaceAll(" ","").isEmpty() ||
-                account.getHash().replaceAll(" ","").isEmpty() ||
+                account.getHash().replaceAll(" ","").length() < 8 ||
                 account.getAccountRole().replaceAll(" ","").isEmpty()) {
             return true;
         } else {
