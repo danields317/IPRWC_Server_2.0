@@ -112,10 +112,15 @@ public class ProductController {
         if (!checkFileExtension(fileName)){
             throw new UnsupportedDataTypeException();
         }
-        int id = productDAO.createProduct(product.getProductName(), product.getDescription(), product.getBrand(),
-                product.getPrice(), product.getStock(), product.getCategory());
-        String imageLocation = storeImage(thumbnail, id, "thumbnail.jpg");
-        productDAO.setThumbnail(imageLocation, id);
+        try {
+            int id = productDAO.createProduct(product.getProductName(), product.getDescription(), product.getBrand(),
+                    product.getPrice(), product.getStock(), product.getCategory());
+            String imageLocation = storeImage(thumbnail, id, "thumbnail.jpg");
+            productDAO.setThumbnail(imageLocation, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void updateProduct(InputStream thumbnail, Product product, String fileName) throws IOException {
