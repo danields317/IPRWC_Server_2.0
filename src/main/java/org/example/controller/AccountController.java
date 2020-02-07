@@ -49,8 +49,13 @@ public class AccountController {
     }
 
     public void createCustomerAccount(Account account) throws Exception {
-        account.setAccountRole("Customer");
-        createAccount(account);
+        try {
+            account.setAccountRole("Customer");
+            createAccount(account);
+        } catch (Exception e) {
+            throw e;
+        }
+
     }
 
     public void createAccount(Account account) throws Exception {

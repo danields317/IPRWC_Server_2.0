@@ -9,6 +9,7 @@ import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.example.core.*;
 import org.example.resources.AccountResource;
 import org.example.resources.AuthenticationResource;
@@ -58,9 +59,11 @@ public class IprwcServerApplication extends Application<IprwcServerConfiguration
 
         environment.jersey().register(RolesAllowedDynamicFeature.class);
 
+        environment.jersey().register(HeaderFilter.class);
+
         environment.jersey().register(new AccountResource(jdbi));
         environment.jersey().register(new AuthenticationResource(jdbi));
-        environment.jersey().register(new ProductResource(jdbi));
+        environment.jersey().register(new ProductResource(jdbi, configuration.getProductFolder()));
         environment.jersey().register(new OrderResource(jdbi));
     }
 }

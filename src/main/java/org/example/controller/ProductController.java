@@ -9,8 +9,6 @@ import org.jdbi.v3.core.Jdbi;
 
 import javax.activation.UnsupportedDataTypeException;
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,9 +16,11 @@ import java.util.NoSuchElementException;
 public class ProductController {
 
     private final ProductDAO productDAO;
+    private final String productFolder;
 
-    public ProductController(Jdbi jdbi){
+    public ProductController(Jdbi jdbi, String productFolder){
         this.productDAO = jdbi.onDemand(ProductDAO.class);
+        this.productFolder = productFolder;
     }
 
     public Product getProductWithId(int id) throws SQLException {
@@ -82,8 +82,11 @@ public class ProductController {
         return productList;
     }
 
-    public void deleteProductWithId(int id) throws NoSuchElementException, IOException {
+    public void deleteProductWithId(int id) throws NoSuchElementException, IOException, SQLException {
+        String imageFolder;
         try {
+            imageFolder = getProductWithId(id).getThumbnail();
+            System.out.println(imageFolder);
             boolean succes = productDAO.deleteProductById(id);
             if (!succes){
                 throw new NoSuchElementException();
@@ -91,7 +94,7 @@ public class ProductController {
         } catch (Exception e){
             throw e;
         }
-        removeProductFolder(generateProductFolderPath(id));
+        removeProductFolder(generateProductFolderPath(imageFolder));
     }
 
     public void deleteProductImageWithId(int productId, int imageId) throws NoSuchElementException{
@@ -128,10 +131,8 @@ public class ProductController {
     }
 
     public String storeImage(InputStream image, int product_id, String fileName) throws IOException {
-        Path path = Paths.get(System.getProperty("user.dir"));
-        path = path.getParent();
         StringBuilder pathBuilder = new StringBuilder();
-        String location = pathBuilder.append(path.toString()).append("/").append("Products/").append(product_id).append("/").append(fileName).toString();
+        String location = pathBuilder.append(productFolder).append("/").append(product_id).append("/").append(fileName).toString();
         String styledLocation = styleLocation(location);
         File targetFile = new File(styledLocation);
 
@@ -169,22 +170,17 @@ public class ProductController {
         }
     }
 
-    private File generateProductFolderPath(int id){
-        Path path = Paths.get(System.getProperty("user.dir"));
-        path = path.getParent();
-        StringBuilder pathBuilder = new StringBuilder();
-        String location = pathBuilder.append(path.toString()).append("/").append("Products/").append(id).toString();
-        return new File(location);
+    private File generateProductFolderPath(String path){
+        File tempPath = new File(path);
+        File location = tempPath.getParentFile();
+        return location;
     }
 
 
     public File getThumbnail(int id) throws FileNotFoundException {
         try {
-            Path path = Paths.get(System.getProperty("user.dir"));
-            path = path.getParent();
-            StringBuilder pathBuilder = new StringBuilder();
-            String location = pathBuilder.append(path.toString()).append("/").append("Products/").append(id).append("/").append("thumbnail.jpg").toString();
-            File file = new File(location);
+            Product product = productDAO.readProductById(id);
+            File file = new File(product.getThumbnail());
             if(!file.exists()){
                 throw new FileNotFoundException("File not found");
             }

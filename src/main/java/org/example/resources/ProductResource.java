@@ -20,8 +20,8 @@ public class ProductResource {
 
     private final ProductController productController;
 
-    public ProductResource(Jdbi jdbi){
-        this.productController = new ProductController(jdbi);
+    public ProductResource(Jdbi jdbi, String productFolder){
+        this.productController = new ProductController(jdbi, productFolder);
     }
 
     @POST

@@ -17,6 +17,9 @@ public class IprwcServerConfiguration extends Configuration {
     @NotNull
     private String issuer;
 
+    @NotNull
+    private String productfolder;
+
     @JsonProperty("database")
     public void setDataSourceFactory(DataSourceFactory factory) {
         this.database = factory;
@@ -42,4 +45,10 @@ public class IprwcServerConfiguration extends Configuration {
 
     @JsonProperty("issuer")
     public String getIssuer() { return issuer; }
+
+    @JsonProperty("productfolder")
+    public String getProductFolder() { return productfolder; }
+
+    @JsonProperty("productfolder")
+    public void setProductfolder(String productFolder) { this.productfolder = productFolder; }
 }
