@@ -17,6 +17,9 @@ public interface OrderDAO {
     @SqlQuery("SELECT (COUNT(*)::DECIMAL / :pagesize) FROM customer_order")
     double getMaxPages(@Bind("pagesize") int pageSize);
 
+    @SqlQuery("SELECT (COUNT(*)::DECIMAL / :pagesize) FROM customer_order WHERE account_id = :accountId")
+    double getPersonalMaxPages(@Bind("pagesize") int pageSize, @Bind("accountId") int accountId);
+
     @SqlQuery("SELECT * FROM customer_order ORDER BY delivery_date LIMIT :pagesize OFFSET :offset")
     @RegisterRowMapper(OrderMapper.class)
     List<Order> getOrderList(@Bind("pagesize") int pageSize, @Bind("offset") int offset);

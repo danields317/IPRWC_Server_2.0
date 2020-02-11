@@ -25,10 +25,13 @@ public class OrderResource {
     }
 
     @POST
-    public Response placeOrder(Order order){
+    @PermitAll
+    public Response placeOrder(@HeaderParam("Authorization") String token, Order order){
         try {
-            orderController.placeOrder(order);
+            orderController.placeOrder(token, order);
             return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (IllegalAccessException e){
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         } catch (NullPointerException e){
             return Response.status(Response.Status.BAD_REQUEST).entity("Missing necessary parameters").build();
         } catch (Exception e){

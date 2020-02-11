@@ -43,6 +43,8 @@ public class AccountResource {
             return Response.status(Response.Status.CONFLICT).entity("Token could not be validated").build();
         } catch (SQLException e){
             return Response.status(Response.Status.CONFLICT).entity("Unable to update account").build();
+        } catch (NullPointerException e){
+            return Response.status(Response.Status.BAD_REQUEST).entity("Missing or invalid values").build();
         }
     }
 

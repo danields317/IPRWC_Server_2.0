@@ -29,8 +29,11 @@ public class AccountController {
         return account;
     }
 
-    public void updatePersonalAccount(String token, Account account) throws JWTDecodeException, SQLException{
+    public void updatePersonalAccount(String token, Account account) throws JWTDecodeException, SQLException, NullPointerException{
         int personalId = getId(token);
+        if (checkEmptyUpdate(account)) {
+            throw new NullPointerException();
+        }
         try {
             accountDAO.updateAccount(personalId, account.getFirstName(), account.getLastName(), account.getEmailAddress(), account.getCity(), account.getStreet(),
                     account.getHouseNumber());

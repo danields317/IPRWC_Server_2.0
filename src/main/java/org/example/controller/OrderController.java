@@ -51,7 +51,7 @@ public class OrderController {
         OrderList orderList = new OrderList();
         try {
             orderList.setOrders(orderDAO.getPersonalOrderList(pageSize, offset, personalId));
-            orderList.setTotalPages(orderDAO.getMaxPages(pageSize));
+            orderList.setTotalPages(orderDAO.getPersonalMaxPages(pageSize, personalId));
             return orderList;
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,16 +73,19 @@ public class OrderController {
     }
 
 
-    public void placeOrder(Order order) throws Exception {
-        try {
-            int orderId = orderDAO.addOrder(order.getAccountId(), order.getDeliveryCity(), order.getDeliveryAddress(),
-                    order.getDeliveryNumber(), order.getDeliveryDate());
-            for (OrderItem item: order.getItems()){
-                orderDAO.addOrderItem(orderId, item.getProductId(), item.getAmount());
+    public void placeOrder(String token, Order order) throws Exception {
+        int personalId = getId(token);
+        if (personalId == order.getAccountId()) {
+            try {
+                int orderId = orderDAO.addOrder(order.getAccountId(), order.getDeliveryCity(), order.getDeliveryAddress(),
+                        order.getDeliveryNumber(), order.getDeliveryDate());
+                for (OrderItem item: order.getItems()){
+                    orderDAO.addOrderItem(orderId, item.getProductId(), item.getAmount());
+                }
+            } catch (Exception e){
+                throw e;
             }
-        } catch (Exception e){
-            throw e;
-        }
+        } else throw new IllegalAccessException();
     }
 
     public void updateOrder(Order order) {
